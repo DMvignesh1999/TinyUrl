@@ -1,0 +1,178 @@
+﻿@using TinyUrlDetail.Models
+@model TinyUrlModel
+@{
+    ViewData["Title"] = "Tiny URL";
+}
+
+<h2 style="margin-top: 1.2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 2rem;
+    color: #5b21b6;
+    font-weight: 700;
+    font-family:'Times New Roman'">
+    Tiny URL
+</h2>
+
+<!-- Main container for input and generated short URL -->
+<div style="
+    border-radius: 1rem;
+    box-shadow: 0 2px 12px #5b21b614;
+    padding: 1.1rem .8rem .8rem;
+    display: flex;
+    flex-direction: column;
+    min-width: 500px;
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto 1rem auto;
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+">
+
+    <input type="url" id="urlInput" name="url" placeholder="Enter URL to shorten" style="
+        flex: 1;
+        padding: .5rem .7rem;
+        border: 1.2px solid #a5b4fc;
+        border-radius: .6rem;
+        font-size: .95rem;
+        outline: none;
+        transition: border .2s;
+        background: #f3f4f6;
+        margin-bottom: .5rem;
+    " />
+
+    <button type="button" id="generateButton" style="
+        width: 100%;
+        padding: .6rem 0;
+        background: linear-gradient(90deg, #f43f5e, #a21caf);
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: .6rem;
+        cursor: pointer;
+        box-shadow: 0 2px 8px #5b21b614;
+        transition: background .2s, box-shadow .2s;
+        margin-top: .2rem;
+    ">
+        Generate
+    </button>
+
+    <br />
+
+    @if (!string.IsNullOrEmpty(Model.UrlCode))
+    {
+        <div style="
+                font-size: 1rem;
+                color: #059669;
+                font-weight: 600;
+                background: #f0fdf4;
+                padding: .5rem .8rem;
+                border-radius: .6rem;
+                display: inline-block;
+                margin-bottom: .4rem;
+                max-width: 90vw;
+                word-break: break-all;
+                overflow-wrap: anywhere;
+                white-space: normal;
+            ">
+            <span style="font-family:'Times New Roman'; color:crimson">Short URL:</span>
+            <a href=@("/redirectoriginalurl?urlcode=" + Model.UrlCode) target="_blank" id="shortUrl">
+                @("https://tiny-url-demo.azurewebsites.net/" + Model.UrlCode)
+            </a>
+            <br />
+            <button type="button" id="copyButton" style="
+                    display: flex;
+                    padding: .32rem .9rem;
+                    font-size: .95rem;
+                    font-weight: 500;
+                    color: #fff;
+                    background: #2563eb;
+                    border: none;
+                    border-radius: .7rem;
+                    cursor: pointer;
+                    transition: background .2s;
+                    justify-content: center;
+                    align-items: center;
+                    margin-top: .3rem;
+                ">
+                Copy
+            </button>
+        </div>
+    }
+
+</div>
+<br />
+
+<!-- Container for all previously generated short URLs -->
+<!-- Container for all previously generated short URLs -->
+<div id="shortUrlContainer" style="
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column; /* stack children vertically */
+    gap: .5rem; /* spacing between divs */
+">
+    @if (Model.TinyUrlDetails != null)
+    {
+        @foreach (var tinyUrlDetail in Model.TinyUrlDetails)
+        {
+            <div class="short-url-div" style="
+                                display: flex;
+                                flex-direction: column; /* stack original and short URL vertically */
+                                padding: .75rem;
+                                border: 1px solid #e5e7eb;
+                                border-radius: .6rem;
+                                background: #f9f9f9;
+                                gap: .3rem; /* spacing between lines */
+                            ">
+                <!-- Original URL -->
+                <p style="
+                            color: #64748b;
+                            font-size: .98rem;
+                            word-break: break-all;
+                            margin: 0;
+                            font-weight: 500;
+                        ">
+                    
+                </p>
+                @tinyUrlDetail.OriginalUrl
+                <!-- Short URL -->
+                <p style="
+                            color: #2563eb;
+                            font-weight: 600;
+                            text-decoration: underline;
+                            word-break: break-all;
+                            font-size: 1.08rem;
+                            margin: 0;
+                        ">
+                    <a href=@("/redirectoriginalurl?urlcode=" + tinyUrlDetail.UrlCode) target="_blank" class="shortUrlLink">
+                        @("https://tiny-url-demo.azurewebsites.net/" + tinyUrlDetail.UrlCode)
+                    </a>
+                </p>
+
+                <!-- Delete Button -->
+                <button id="deleteButton" style="
+                            background: #f43f5e;
+                            color: #fff;
+                            border: none;
+                            border-radius: .7rem;
+                            padding: .5rem 1.1rem;
+                            font-size: 1rem;
+                            font-weight: 500;
+                            cursor: pointer;
+                            transition: background .2s;
+                            align-self: flex-end; /* put button to right */
+                        ">
+                    Delete
+                </button>
+            </div>
+        }
+    }
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/site.js"></script>
